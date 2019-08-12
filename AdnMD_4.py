@@ -161,19 +161,34 @@ def score(module_list):
 
 
         #["A:{}".format(prova[i][j]) for j in range(1, 4)]
-
+    i=0
     for item in sorted_score:
         output.write("%s\n" %item)
+        if i>10000:
+            break
+        i=i+1
     print("End")
     #return formated_function, sorted_score
 
-
-def mutate(infile,outfile):
+def modify_file():
+    infile = open("final_score","rt")
+    outfile = open("final_score_1", "wt")
+    os.system("sed 's/\[//g' " + infile +" > "+outfile)
+    infile.close()
+    outfile.close()
+    
+    infile2 = open("final_score_1","rt")
+    outfile2 = open("final_score_changed", "wt")
+    os.system("sed 's/\]//g' "+ infile2 +" > "+ outfile2)
+    infile2.close()
+    outfile2.close()
+    
+def mutate(infile):
     uu=[]
     for line in infile:
         uu.append(line)
     sorted_score = [l.split(', ') for l in uu]
-    outfile.write(sorted_score[0][0])
+    
     
     sorted_sc = sorted(sorted_score, key=itemgetter(0))
     print(sorted_sc[0])
@@ -396,15 +411,16 @@ centroid_list=centroid(combination_list,4)
 module_list=module(combination_list,centroid_list,4)
 output = open("final_score", "wt")
 #formated_function, sorted_score=score(module_list)
+score(module_list)
+output.close()
+
+modify_file()
+
+infile =open("final_score_changed","rt")
+mutate(infile)
+infile.close()
 
 
-#infile =open("final_score_changed","rt")
-#outfile =open("logfile","wt")
-#mutate(infile,outfile)
-#outfile.close()
-#infile.close()
-
-#output.close()
 propka()
 #minimization()
 
